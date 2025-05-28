@@ -1,0 +1,10 @@
+{
+    "api_key": "GeQa83eNuad2JB5mAO8u5S2wbNSV90E7YT9JaPvWuYcwIuQlcXMgWEOMLtzOR66l",
+    "api_secret": "1aeeXUWUdv3tsWoDonVhRGH8DgJLQXHucZTl42E2YqgGyEdhUbEiKEak5JQlBLpz",
+    "symbol": "ETH/USDT",
+    "amount": 0.01,
+    "leverage": 10,
+    "testnet": false,
+    "telegram_token": "7760664257:AAGuJe4_jnKgAc3CzmAbWwqQWXdDJOhsmYA",
+    "telegram_chat_id": "7661326054"
+}
