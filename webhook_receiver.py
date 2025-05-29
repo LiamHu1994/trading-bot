@@ -7,6 +7,11 @@ app = Flask(__name__)
 @app.route('/webhook', methods=['POST'])
 def webhook():
     data = request.json
+    # ✅ 測試用訊息，會在任何訊號進來時通知 Telegram
+    from telegram_notify import send_telegram_message
+    send_telegram_message(f"[Webhook] Signal received: {data}")
+
+
     if data:
         send_telegram_message(f"📩 收到訊號：{data}")
         execute_order(data)
