@@ -16,16 +16,17 @@ def send_telegram_message(message):
     headers = {"Content-Type": "application/json"}
     try:
         res = requests.post(url, data=json.dumps(payload), headers=headers)
-        print(f"✅ Telegram 傳送成功")
+        print("✅ Telegram 發送成功")
+        print("Response:", res.text)
     except Exception as e:
-        print(f"❌ Telegram 傳送失敗: {e}")
+        print(f"❌ Telegram 發送失敗: {e}")
 
 # === Flask App ===
 app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return '✅ Bot is live.'
+    return '✅ Webhook server is running.'
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
@@ -35,7 +36,7 @@ def webhook():
         send_telegram_message(f"📨 Webhook 訊號:\n{data}")
         return {'status': 'ok'}, 200
     except Exception as e:
-        print(f"❌ webhook 處理錯誤: {e}")
+        print(f"❌ webhook 錯誤: {e}")
         send_telegram_message(f"❌ Webhook 錯誤:\n{e}")
         return {'error': str(e)}, 500
 
@@ -46,7 +47,7 @@ def test():
     send_telegram_message(f"🧪 測試訊號:\n{data}")
     return {'status': 'test message sent'}, 200
 
-# ✅ Render 自動取得 PORT（重點修正）
+# === 自動綁定 Render 的 port
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 10000))
     app.run(host='0.0.0.0', port=port)
