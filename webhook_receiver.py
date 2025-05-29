@@ -3,13 +3,13 @@ import requests
 import json
 import os
 
-# === 使用者設定 ===
+# === 使用者設定（已寫死）===
 API_KEY = "GeQa83eNuad2JB5mAO8u5S2wbNSV90E7YT9JaPvWuYcwIuQlcXMgWEOMLtzOR66l"
 API_SECRET = "1aeeXUWUdv3tsWoDonVhRGH8DgJLQXHucZTl42E2YqgGyEdhUbEiKEak5JQlBLpz"
 TG_TOKEN = "7760664257:AAGuJe4_jnKgAc3CzmAbWwqQWXdDJOhsmYA"
 TG_CHAT_ID = "7661326054"
 
-# === Telegram 通知功能 ===
+# === Telegram 發送訊息 ===
 def send_telegram_message(message):
     url = f"https://api.telegram.org/bot{TG_TOKEN}/sendMessage"
     payload = {"chat_id": TG_CHAT_ID, "text": message}
@@ -26,7 +26,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return '✅ Webhook server is running.'
+    return '✅ Webhook bot is running.'
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
@@ -43,11 +43,10 @@ def webhook():
 @app.route('/test')
 def test():
     data = {"side": "buy"}
-    print(f"🧪 測試觸發: {data}")
-    send_telegram_message(f"🧪 測試訊號:\n{data}")
-    return {'status': 'test message sent'}, 200
+    print("🧪 測試 webhook")
+    send_telegram_message(f"🧪 測試訊號: {data}")
+    return {'status': 'test sent'}, 200
 
-# === 自動綁定 Render 的 port
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 10000))
     app.run(host='0.0.0.0', port=port)
