@@ -1,44 +1,52 @@
 from flask import Flask, request
-import json
 import requests
+import json
+import os
 
-# === Telegram config ===
-TELEGRAM_TOKEN = "你的 BOT TOKEN"
-TELEGRAM_CHAT_ID = "你的 CHAT ID"
+# === 使用者設定 ===
+API_KEY = "GeQa83eNuad2JB5mAO8u5S2wbNSV90E7YT9JaPvWuYcwIuQlcXMgWEOMLtzOR66l"
+API_SECRET = "1aeeXUWUdv3tsWoDonVhRGH8DgJLQXHucZTl42E2YqgGyEdhUbEiKEak5JQlBLpz"
+TG_TOKEN = "7760664257:AAGuJe4_jnKgAc3CzmAbWwqQWXdDJOhsmYA"
+TG_CHAT_ID = "7661326054"
 
+# === Telegram 通知功能 ===
 def send_telegram_message(message):
-    url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
-    payload = {"chat_id": TELEGRAM_CHAT_ID, "text": message}
+    url = f"https://api.telegram.org/bot{TG_TOKEN}/sendMessage"
+    payload = {"chat_id": TG_CHAT_ID, "text": message}
     headers = {"Content-Type": "application/json"}
     try:
-        requests.post(url, data=json.dumps(payload), headers=headers)
+        res = requests.post(url, data=json.dumps(payload), headers=headers)
+        print(f"✅ Telegram 傳送成功")
     except Exception as e:
-        print(f"❌ Failed to send Telegram message: {e}")
+        print(f"❌ Telegram 傳送失敗: {e}")
 
-# === Flask app ===
+# === Flask App ===
 app = Flask(__name__)
 
 @app.route('/')
-def index():
-    return '✅ Bot is running.'
+def home():
+    return '✅ Bot is live.'
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
     try:
         data = request.json
-        print(f"📨 Webhook received: {data}")
-        send_telegram_message(f"📨 Webhook Received:\n{data}")
+        print(f"📨 收到 Webhook: {data}")
+        send_telegram_message(f"📨 Webhook 訊號:\n{data}")
         return {'status': 'ok'}, 200
     except Exception as e:
-        send_telegram_message(f"❌ Error in webhook:\n{str(e)}")
+        print(f"❌ webhook 處理錯誤: {e}")
+        send_telegram_message(f"❌ Webhook 錯誤:\n{e}")
         return {'error': str(e)}, 500
 
 @app.route('/test')
 def test():
     data = {"side": "buy"}
-    print(f"🧪 Test webhook triggered: {data}")
-    send_telegram_message(f"🧪 Test Trigger:\n{data}")
-    return {"status": "test buy sent"}, 200
+    print(f"🧪 測試觸發: {data}")
+    send_telegram_message(f"🧪 測試訊號:\n{data}")
+    return {'status': 'test message sent'}, 200
 
+# ✅ Render 自動取得 PORT（重點修正）
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    port = int(os.environ.get('PORT', 10000))
+    app.run(host='0.0.0.0', port=port)
